@@ -1,10 +1,10 @@
 import { MCPServer } from 'mcp-use';
 import { z } from 'zod';
 import {
-  createKitReader,
+  createPaymentKitReader,
   keydrisCredentials,
   keydrisFetch,
-} from './src/keydris/index.js';
+} from './src/keydris-payment/index.js';
 import {
   failed,
   isExpired,
@@ -23,7 +23,7 @@ const gatewayUrl =
   process.env.KEYDRIS_GATEWAY_URL ??
   'https://dev.api.keydris.com/gateway/credentials';
 const reader = gatewayUrl
-  ? createKitReader({
+  ? createPaymentKitReader({
       gatewayUrl,
       tokenHeader: process.env.KEYDRIS_TOKEN_HEADER,
     })
