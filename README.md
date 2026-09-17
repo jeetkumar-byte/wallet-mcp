@@ -18,6 +18,12 @@ Copy `.env.example` to `.env` when running locally. The gateway defaults to
 Normal MCP requests carry the single-use token in
 `params._meta["keydris/kit_action_token"]`.
 
+The agent supplies amount, currency, method, and transaction type. It does not
+supply a Keydris payment connection id. During redemption, Keydris selects the
+single buyer Stripe connection allowed by the runtime session's policy version.
+Calls fail closed when no buyer connection or more than one buyer connection
+matches.
+
 ## Develop
 
 ```bash
