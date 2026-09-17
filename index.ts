@@ -62,7 +62,7 @@ export const authorizePayment = server.tool(
   {
     name: 'authorize_payment',
     description:
-      'Authorize a Stripe MPP charge challenge against the buyer policy and issue a bounded shared payment token.',
+      'Authorize a Stripe MPP charge challenge against the buyer policy using its single eligible buyer connection and issue a bounded shared payment token.',
     inputSchema: z.object({
       challenge: stripeChallengeSchema,
       payment: paymentContextSchema.extend({
