@@ -12,8 +12,12 @@ the payment, and issues a bounded Stripe Shared Payment Token.
 
 ## Configure
 
-Copy `.env.example` to `.env` when running locally. The gateway defaults to
-`https://dev.api.keydris.com/gateway/credentials`.
+Copy `.env.example` to `.env` when running locally. Configure both
+`KEYDRIS_API_URL` and `KEYDRIS_MCP_KEY` with the values issued when this MCP is
+enrolled. The reader authenticates credential redemption, registers its
+capabilities, sends a heartbeat, and reports tool and provider outcomes with
+that installation identity. `KEYDRIS_GATEWAY_URL` remains an unenrolled legacy
+fallback when neither enrollment variable is set.
 
 Normal MCP requests carry the single-use token in
 `params._meta["keydris/kit_action_token"]`.
