@@ -6,6 +6,10 @@ import {
   keydrisFetch,
 } from './src/keydris-payment/index.js';
 import {
+  createReaderTelemetry,
+  readerApiUrl,
+} from './src/keydris/index.js';
+import {
   failed,
   isExpired,
   normalizeAmount,
@@ -19,12 +23,30 @@ import {
   toMinorUnits,
 } from './src/stripe.js';
 
-const gatewayUrl =
-  process.env.KEYDRIS_GATEWAY_URL ??
-  'https://dev.api.keydris.com/gateway/credentials';
+const apiUrl = process.env.KEYDRIS_API_URL;
+const installationKey = process.env.KEYDRIS_MCP_KEY;
+if (Boolean(apiUrl) !== Boolean(installationKey)) {
+  throw new Error('Set both KEYDRIS_API_URL and KEYDRIS_MCP_KEY');
+}
+const telemetry =
+  apiUrl && installationKey
+    ? createReaderTelemetry({
+        apiUrl,
+        apiKey: installationKey,
+        onDropped: () => console.warn('Keydris telemetry delivery dropped'),
+      })
+    : undefined;
+telemetry?.start();
+
+const gatewayUrl = apiUrl
+  ? new URL('gateway/credentials', readerApiUrl(apiUrl)).href
+  : (process.env.KEYDRIS_GATEWAY_URL ??
+    'https://dev.api.keydris.com/gateway/credentials');
 const reader = gatewayUrl
   ? createPaymentKitReader({
       gatewayUrl,
+      installationKey,
+      telemetry,
       tokenHeader: process.env.KEYDRIS_TOKEN_HEADER,
     })
   : null;
